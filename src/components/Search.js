@@ -4,7 +4,20 @@ import axios from "axios";
 const Search = () => {
   const [term, setTerm] = useState("home");
   const [results,setResults] = useState([]);
+  const [debouncedTerm,setDebouncedTerm] = useState(term);
   useEffect(() => {
+    console.log("term");
+    const timerId = setTimeout(() => {
+        setDebouncedTerm(term);
+    },1000);
+
+    return () => {
+        clearTimeout(timerId);
+    };
+  },[term]);
+
+  useEffect(() => {
+
     const searchWiki = async () => {
         const {data} = await axios.get('https://en.wikipedia.org/w/api.php',{
             params:{
@@ -12,29 +25,19 @@ const Search = () => {
                 list: 'search',
                 origin: '*',
                 format:'json',
-                srsearch: term
+                srsearch: debouncedTerm
             }
         });
 
         setResults(data.query.search);
     } 
-    
-    if(term && !results.length){
-        searchWiki()
-    }else{
-        const timeoutId = setTimeout(() => {
-            if(term){
-                searchWiki();
-            }
-      
-        },1000)
 
-        return () => {
-            clearTimeout(timeoutId);
-        }
-    }
-    
-    },[term]);
+    searchWiki();
+
+    console.log("debouncedTerm");
+
+  },[debouncedTerm]);
+ 
 
     const renderResults = results.map((result) => {
         return (
