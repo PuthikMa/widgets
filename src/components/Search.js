@@ -6,7 +6,6 @@ const Search = () => {
   const [results,setResults] = useState([]);
   const [debouncedTerm,setDebouncedTerm] = useState(term);
   useEffect(() => {
-    console.log("term");
     const timerId = setTimeout(() => {
         setDebouncedTerm(term);
     },1000);
