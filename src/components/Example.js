@@ -13,7 +13,6 @@ const Example = () => {
         const loadUser = async () => {
           const response = await axios.get(URL);
         setUsers(response.data);
-          console.log(response.data);
         }
         
         loadUser();
